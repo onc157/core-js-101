@@ -517,8 +517,18 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  return array.reduce((acc, elem) => {
+    const country = keySelector(elem);
+    const city = valueSelector(elem);
+
+    const accCountry = acc.get(country) || [];
+    accCountry.push(city);
+
+    acc.set(country, accCountry);
+
+    return acc;
+  }, new Map());
 }
 
 
@@ -535,8 +545,8 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+function selectMany(arr, childrenSelector) {
+  return arr.reduce((acc, elem) => [...acc, ...childrenSelector(elem)], []);
 }
 
 
@@ -552,8 +562,13 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  if (indexes.length === 1) {
+    return arr[indexes];
+  }
+  const arrDepth = arr[indexes[0]];
+  indexes.shift();
+  return getElementByIndexes(arrDepth, indexes);
 }
 
 
@@ -575,8 +590,14 @@ function getElementByIndexes(/* arr, indexes */) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8 ]   =>  [ 5, 6, 7, 8, 1, 2, 3, 4 ]
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  if (arr.length < 2) return arr;
+  const halfLength = Math.floor(arr.length / 2);
+  const isOdd = arr.length % 2 === 0;
+  if (!isOdd) {
+    return [...arr.slice(-halfLength), halfLength + 1, ...arr.slice(0, halfLength)];
+  }
+  return [...arr.slice(-halfLength), ...arr.slice(0, halfLength)];
 }
 
 
