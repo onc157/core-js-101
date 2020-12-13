@@ -264,8 +264,14 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arrNumbers = ccn.toString().split('').reverse()
+    .map((elem, i) => ((i + 1) % 2 === 0 ? elem * 2 : +elem))
+    .reverse()
+    .map((elem) => (elem > 9 ? elem - 9 : elem))
+    .reduce((a, b) => a + b);
+
+  return arrNumbers % 10 === 0;
 }
 
 /**
@@ -282,8 +288,12 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  if (num.length === 1) {
+    return num;
+  }
+  const sumOfNum = num.toString().split('').reduce((a, b) => +a + +b);
+  return getDigitalRoot(sumOfNum);
 }
 
 
@@ -308,8 +318,12 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const startStr = str;
+  const currentStr = str.replace('[]', '').replace('{}', '').replace('()', '').replace('<>', '');
+  if (currentStr === '') return true;
+  if (currentStr === startStr) return false;
+  return isBracketsBalanced(currentStr);
 }
 
 
@@ -333,8 +347,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -350,8 +364,18 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  let result = '';
+  if (!(pathes.every((elem) => elem[0] === '/'))) return result;
+
+  for (let i = 1; i <= pathes[0].length - 1; i += 1) {
+    const currentElement = pathes[0].slice(0, i);
+    if (pathes.every((item) => item.includes(currentElement))) {
+      result = currentElement;
+    }
+  }
+
+  return result.slice(0, result.lastIndexOf('/') + 1);
 }
 
 
